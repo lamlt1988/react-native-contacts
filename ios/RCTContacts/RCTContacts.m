@@ -664,12 +664,14 @@ RCT_EXPORT_METHOD(openContactForm:(NSDictionary *)contactData
     [self updateRecord:contact withData:contactData];
 
     CNContactViewController *controller = [CNContactViewController viewControllerForNewContact:contact];
-
+    [controller setAllowsActions:NO];
+    [controller setAllowsEditing:NO];
 
     controller.delegate = self;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:controller];
+        [navigation setNavigationBarHidden:NO];
         UIViewController *viewController = (UIViewController*)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
         while (viewController.presentedViewController)
             {
@@ -794,6 +796,8 @@ RCT_EXPORT_METHOD(viewExistingContact:(NSDictionary *)contactData resolver:(RCTP
         // Add a cancel button which will close the view
         contactViewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:backTitle == nil ? @"Cancel" : backTitle style:UIBarButtonSystemItemCancel target:self action:@selector(cancelContactForm)];
         contactViewController.delegate = self;
+        [contactViewController setAllowsEditing:NO];
+        [contactViewController setAllowsActions:NO];
 
 
         dispatch_async(dispatch_get_main_queue(), ^{
